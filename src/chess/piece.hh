@@ -21,17 +21,18 @@ class Piece
         Colour colour;
         char name;
         int value;
+        int moveCount = 0;
     public:
         Piece();
         Piece(Colour colour, char name, int value);
         Colour getColour() {return colour;};
         char getName() {return name;};
         int getValue() {return value;};
+        int getMoveCount() {return moveCount;};
+        void incrementMoveCount() {moveCount++;};
 
         virtual int checkMove(int src_x, int src_y, int dst_x, int dst_y) {return 1;};
 };
-
-// TODO Implement inherited classes for each piece
 
 class King : public Piece
 {

@@ -13,6 +13,8 @@ Piece::Piece(Colour c, char n, int v)
     value = v;
 }
 
+// TODO:
+// Castling logic should be handled in board.cc
 int Rook::checkMove(int src_x, int src_y, int dst_x, int dst_y)
 {
     /**
@@ -98,6 +100,9 @@ int Queen::checkMove(int src_x, int src_y, int dst_x, int dst_y)
     return 1;
 }
 
+// TODO:
+// Castling logic should be done in board.cc
+// Check and CheckMate logic should be done in board.cc
 int King::checkMove(int src_x, int src_y, int dst_x, int dst_y)
 {
     /**
@@ -111,11 +116,10 @@ int King::checkMove(int src_x, int src_y, int dst_x, int dst_y)
      * 
      * The king also has the ability to perform a special move known as castling.
      */
-    // TODO: Add logic for castling
-    // Check that the king is only moving into an adjacent square
     int x_diff = abs(src_x - dst_x);
     int y_diff = abs(src_y - dst_y);
 
+    // Check that the king is only moving into an adjacent square
     if (x_diff > 1 || y_diff > 1) {
         return 0;
     }
@@ -198,6 +202,8 @@ int Pawn::checkMove(int src_x, int src_y, int dst_x, int dst_y)
      * Black's pawn on g4 may capture White's pawn by moving to f3 on the next turn. 
      * If Black chooses not to make this capture, he loses the ability to capture en passant.
      */
+    // Allow 2 spaces on first move
+    int spacesAllowed = (this->getMoveCount() == 0) ? 2 : 1;
     // Check that the pawn is moving forward. (up for white, down for black)
     if (src_x != dst_x) {
         return 0;
@@ -206,12 +212,12 @@ int Pawn::checkMove(int src_x, int src_y, int dst_x, int dst_y)
     // TODO: Figure out a way to check for 2 sqaures on first move
     switch ((this->getColour()).getColour()) {
         case COLOUR_WHITE:
-            if (src_y - dst_y != 1) {
+            if (src_y - dst_y > spacesAllowed) {
                 return 0;
             }
             break;
         case COLOUR_BLACK:
-            if (dst_y - src_y != 1) {
+            if (dst_y - src_y > spacesAllowed) {
                 return 0;
             }
             break;

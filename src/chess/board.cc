@@ -136,6 +136,7 @@ void Board::movePiece(Player player, char *move, int *status_code)
     }
 
     *status_code = SUCCESS;
+    piece->incrementMoveCount();
     dst_square->setPiece(piece);
     src_square->setPiece(nullptr);
 }
