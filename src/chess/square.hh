@@ -8,12 +8,16 @@
 class Square
 {
     private:
+        int x;
+        int y;
         Colour colour;
         Piece *piece;
     public:
         Square();
-        Square(Colour colour);
-        Square(Colour colour, Piece *p);
+        Square(int x, int y, Colour colour);
+        Square(int x, int y, Colour colour, Piece *p);
+        int getX() {return x;};
+        int getY() {return y;};
         Colour getColour() {return colour;};
         Piece *getPiece() {return piece;};
         void setPiece(Piece *p);

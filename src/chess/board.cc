@@ -7,24 +7,24 @@ Board::Board()
 
     // Initialize board
     board = new Square**[BOARD_SIZE];
-    for (int i = 0; i < BOARD_SIZE; i++) {
-        board[i] = new Square*[BOARD_SIZE];
+    for (int x = 0; x < BOARD_SIZE; x++) {
+        board[x] = new Square*[BOARD_SIZE];
     }
 
     // Populate the board with squares
-    for (int i = 0; i < BOARD_SIZE; i++) {
-        for (int j = 0; j < BOARD_SIZE; j++) {
-            if (i % 2 == 0) {
-                if (j % 2 == 0) {
-                    board[i][j] = new Square(white);
+    for (int x = 0; x < BOARD_SIZE; x++) {
+        for (int y = 0; y < BOARD_SIZE; y++) {
+            if (x % 2 == 0) {
+                if (y % 2 == 0) {
+                    board[x][y] = new Square(x, y, white);
                 } else {
-                    board[i][j] = new Square(black);
+                    board[x][y] = new Square(x, y, black);
                 }
             } else {
-                if (j % 2 == 0) {
-                    board[i][j] = new Square(black);
+                if (y % 2 == 0) {
+                    board[x][y] = new Square(x, y, black);
                 } else {
-                    board[i][j] = new Square(white);
+                    board[x][y] = new Square(x, y, white);
                 }
             }
         }
@@ -150,35 +150,35 @@ void Board::movePiece(Player player, char *move, int *status_code)
 void Board::print()
 {
     std::cout << "\n   ";
-    for (int i = 0; i < 8; i++) {
-        std::cout << " " << (char) ('a' + i) << "   ";
+    for (int x = 0; x < 8; x++) {
+        std::cout << " " << (char) ('a' + x) << "   ";
     }
     std::cout << "\n   ";
-    for (int i = 0; i < 8; i++) {
+    for (int x = 0; x < 8; x++) {
         std::cout << "---- ";
     }
     std::cout << "\n";
 
-    for (int i = 0; i < 8; i++) {
-        std::cout << (char) ('8' - i) << " |";
-        for (int j = 0; j < 8; j++) {
-            if (board[i][j]->getPiece() != nullptr)
-                std::cout << " " << board[i][j]->getPiece()->getColour().getColour() << board[i][j]->getPiece()->getName() << " |";
+    for (int x = 0; x < 8; x++) {
+        std::cout << (char) ('8' - x) << " |";
+        for (int y = 0; y < 8; y++) {
+            if (board[x][y]->getPiece() != nullptr)
+                std::cout << " " << board[x][y]->getPiece()->getColour().getColour() << board[x][y]->getPiece()->getName() << " |";
             else
                 std::cout << "    |";
         }
-        std::cout << " " << (char) ('8' - i) << "\n";
+        std::cout << " " << (char) ('8' - x) << "\n";
 
         std::cout << "   ";
-        for (int j = 0; j < 8; j++) {
+        for (int y = 0; y < 8; y++) {
             std::cout << "---- ";
         }
         std::cout << "\n";
     }
 
     std::cout << "   ";
-    for (int i = 0; i < 8; i++) {
-        std::cout << " " << (char) ('a' + i) << "   ";
+    for (int x = 0; x < 8; x++) {
+        std::cout << " " << (char) ('a' + x) << "   ";
     }
     std::cout << "\n";
 }

@@ -5,14 +5,18 @@ Square::Square()
     
 }
 
-Square::Square(Colour c)
+Square::Square(int v, int h, Colour c)
 {
+    x = h;
+    y = v;
     colour = c;
     piece = nullptr;
 }
 
-Square::Square(Colour c, Piece *p)
+Square::Square(int v, int h, Colour c, Piece *p)
 {
+    x = h;
+    y = v;
     colour = c;
     piece = p;
 }
