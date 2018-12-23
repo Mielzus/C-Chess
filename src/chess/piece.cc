@@ -1,9 +1,10 @@
 #include "piece.hh"
 
-Piece::Piece()
-{
-    
-}
+// TODO: Figure out how to check for capture.
+// Add a function checkCapture that runs if an opponents piece is on the target square
+
+// TODO: Figure out a way to check if there are any pieces in the way of the movement
+// Add a function checkPath that checks the path to the destination is blocked by any other pieces
 
 Piece::Piece(Colour c, char n, int v)
 {
@@ -51,7 +52,11 @@ int Rook::checkMove(int src_x, int src_y, int dst_x, int dst_y)
      * Castling queenside leaves the king on the c-file, while the rook moves to the d-file. 
      * Files, in chess, are columns designated by a letter, as displayed in the diagram.
      */
-    return 0;
+    // Check that the rook is moving in a straight line
+    if (!(src_x == dst_x && src_y != dst_y) && !(src_x != dst_x && src_y == dst_y)) {
+        return 0;
+    }
+    return 1;
 }
 
 int Bishop::checkMove(int src_x, int src_y, int dst_x, int dst_y)
@@ -63,7 +68,14 @@ int Bishop::checkMove(int src_x, int src_y, int dst_x, int dst_y)
      * For example, the bishop in the diagram above will always stay on dark squares. 
      * At the beginning of a game, each player has both a light-squared bishop and a dark-squared bishop.
      */
-    return 0;
+    int x_diff = abs(src_x - dst_x);
+    int y_diff = abs(src_y - dst_y);
+
+    // Check that the bishop is moving diagonally
+    if (x_diff != y_diff) {
+        return 0;
+    }
+    return 1;
 }
 
 int Queen::checkMove(int src_x, int src_y, int dst_x, int dst_y)
@@ -72,8 +84,18 @@ int Queen::checkMove(int src_x, int src_y, int dst_x, int dst_y)
      * The queen combines the abilities of the rook and bishop. 
      * A queen moves any number of squares in a straight line, in any direction. 
      * This mobility makes the queen the most powerful piece in chess. Queens and rooks are known as major pieces.
-     */
-    return 0;
+     */ 
+    int x_diff = abs(src_x - dst_x);
+    int y_diff = abs(src_y - dst_y);
+
+    int diagonalLine = x_diff == y_diff;
+    int straightLine = (src_x == dst_x && src_y != dst_y) || (src_x != dst_x && src_y == dst_y);
+
+    // Check that the queen is only moving diagonally or in a straight line
+    if (diagonalLine + straightLine != 1) {
+        return 0;
+    }
+    return 1;
 }
 
 int King::checkMove(int src_x, int src_y, int dst_x, int dst_y)
@@ -89,7 +111,15 @@ int King::checkMove(int src_x, int src_y, int dst_x, int dst_y)
      * 
      * The king also has the ability to perform a special move known as castling.
      */
-    return 0;
+    // TODO: Add logic for castling
+    // Check that the king is only moving into an adjacent square
+    int x_diff = abs(src_x - dst_x);
+    int y_diff = abs(src_y - dst_y);
+
+    if (x_diff > 1 || y_diff > 1) {
+        return 0;
+    }
+    return 1;
 }
 
 int Knight::checkMove(int src_x, int src_y, int dst_x, int dst_y)
@@ -105,7 +135,14 @@ int Knight::checkMove(int src_x, int src_y, int dst_x, int dst_y)
      * The knight is the only piece that can jump over other pieces. 
      * However, the knight can only capture a piece if it lands on the same square as that piece – jumping over a piece doesn’t result in capture.
      */
-    return 0;
+    int x_diff = abs(src_x - dst_x);
+    int y_diff = abs(src_y - dst_y);
+
+    // Check that the path formed is an L
+    if (x_diff + y_diff != 3) {
+        return 0;
+    }
+    return 1;
 }
 
 int Pawn::checkMove(int src_x, int src_y, int dst_x, int dst_y)
@@ -161,5 +198,23 @@ int Pawn::checkMove(int src_x, int src_y, int dst_x, int dst_y)
      * Black's pawn on g4 may capture White's pawn by moving to f3 on the next turn. 
      * If Black chooses not to make this capture, he loses the ability to capture en passant.
      */
-    return 0;
+    // Check that the pawn is moving forward. (up for white, down for black)
+    if (src_x != dst_x) {
+        return 0;
+    }
+    // Check that the pawn is only moving one sqaure in the y direction
+    // TODO: Figure out a way to check for 2 sqaures on first move
+    switch ((this->getColour()).getColour()) {
+        case COLOUR_WHITE:
+            if (src_y - dst_y != 1) {
+                return 0;
+            }
+            break;
+        case COLOUR_BLACK:
+            if (dst_y - src_y != 1) {
+                return 0;
+            }
+            break;
+    }
+    return 1;
 }

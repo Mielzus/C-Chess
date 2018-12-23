@@ -5,7 +5,7 @@ Colour::Colour()
     
 }
 
-Colour::Colour(int c)
+Colour::Colour(char c)
 {
     colour = c;
 

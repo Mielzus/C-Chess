@@ -11,7 +11,7 @@ class Colour
         const char *name;
     public:
         Colour();
-        Colour(int colour);
+        Colour(char colour);
         char getColour() {return colour;};
         const char *getColourName() {return name;};
 };

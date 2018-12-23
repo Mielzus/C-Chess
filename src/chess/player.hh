@@ -2,7 +2,7 @@
 #define CHESS_PLAYER_H
 
 #include <iostream>
-#include <string.h>
+#include <cstring>
 #include "colour.hh"
 
 class Player

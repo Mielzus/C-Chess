@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 #include "chess/board.hh"
 #include "chess/player.hh"
 #include "chess/colour.hh"

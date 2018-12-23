@@ -1,7 +1,7 @@
 #ifndef CHESS_BOARD_H
 #define CHESS_BOARD_H
 
-#include <stdio.h>
+#include <cstdio>
 #include <iostream>
 #include "square.hh"
 #include "player.hh"

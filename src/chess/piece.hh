@@ -1,6 +1,7 @@
 #ifndef CHESS_PIECE_H
 #define CHESS_PIECE_H
 
+#include <cmath>
 #include <iostream>
 #include "colour.hh"
 
