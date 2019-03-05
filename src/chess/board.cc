@@ -135,10 +135,43 @@ void Board::movePiece(Player player, char *move, int *status_code)
         return;
     }
 
+    // Check if the path to the destination is clear
+    if (!this->checkPath(piece, src_square->getX(), src_square->getY(), dst_square->getX(), dst_square->getY())) {
+        *status_code = BLOCKED_PATH_ERROR;
+        return;
+    }
+
     *status_code = SUCCESS;
     piece->incrementMoveCount();
     dst_square->setPiece(piece);
     src_square->setPiece(nullptr);
+}
+
+int Board::checkPath(Piece *piece, int src_x, int src_y, int dst_x, int dst_y)
+{
+    // Check if the path to the destination is clear
+    int **path;
+    int pathCount, pathX, pathY;
+    int invalidPath = 0;
+    Square *pathSquare;
+
+    path = piece->generatePath(src_x, src_y, dst_x, dst_y, &pathCount);
+
+    for (int i = 0; i < pathCount; i++) {
+        pathX = path[i][0];
+        pathY = path[i][1];
+        free(path[i]);
+
+        pathSquare = this->board[pathY][pathX];
+        if (pathSquare->getPiece() != nullptr) {
+            invalidPath = 1;
+        }
+    }
+
+    // Free path array
+    free(path);
+
+    return !invalidPath;
 }
 
 void Board::print()

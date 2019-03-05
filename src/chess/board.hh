@@ -16,11 +16,13 @@
 
 #define INVALID_SOURCE_PIECE_ERROR 10  // No valid piece on source square
 #define OCCUPIED_DESTINATION_ERROR 11  // Target square occupied
+#define BLOCKED_PATH_ERROR 12  // A piece is blocking path to destination
 
 class Board
 {
     private:
         Square ***board;
+        int checkPath(Piece *piece, int src_x, int src_y, int dst_x, int dst_y);
     public:
         Board();
         void initializePieces();

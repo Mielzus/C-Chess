@@ -3,14 +3,48 @@
 // TODO: Figure out how to check for capture.
 // Add a function checkCapture that runs if an opponents piece is on the target square
 
-// TODO: Figure out a way to check if there are any pieces in the way of the movement
-// Add a function checkPath that checks the path to the destination is blocked by any other pieces
-
 Piece::Piece(Colour c, char n, int v)
 {
     colour = c;
     name = n;
     value = v;
+}
+
+int **Rook::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount)
+{
+    int **path;
+
+    // Subtract 1 to remove the source square
+    *pathCount = abs(dst_x - src_x) + abs(dst_y - src_y) - 1;
+    path = (int**) malloc(sizeof(int*) * *pathCount);
+
+    for (int i = 0; i < *pathCount; i++) {
+        path[i] = (int*) malloc(sizeof(int) * 2);
+        // Add or subtract 1 to X and Y to remove the source square
+        if (dst_y == src_y && dst_x > src_x) {
+            // Move Right
+            // Increment X
+            path[i][0] = src_x + 1 + i;
+            path[i][1] = src_y;
+        } else if (dst_y == src_y && dst_x < src_x) {
+            // Move Left
+            // Decrement X
+            path[i][0] = src_x - 1 - i;
+            path[i][1] = src_y;
+        } else if (dst_x == src_x && dst_y > src_y) {
+            // Move Down
+            // Increment Y
+            path[i][0] = src_x;
+            path[i][1] = src_y + 1 + i;
+        } else if (dst_x == src_x && dst_y < src_y) {
+            // Move Up
+            // Decrement Y
+            path[i][0] = src_x;
+            path[i][1] = src_y - 1 - i;
+        }
+    }
+
+    return path;
 }
 
 // TODO:
@@ -61,6 +95,43 @@ int Rook::checkMove(int src_x, int src_y, int dst_x, int dst_y)
     return 1;
 }
 
+int **Bishop::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount)
+{
+    int **path;
+
+    // Subtract 1 to remove the source square
+    *pathCount = abs(dst_x - src_x) - 1;
+    path = (int**) malloc(sizeof(int*) * *pathCount);
+
+    for (int i = 0; i < *pathCount; i++) {
+        path[i] = (int*) malloc(sizeof(int) * 2);
+        // Add or subtract 1 to X and Y to remove the source square
+        if (dst_y > src_y && dst_x > src_x) {
+            // Move Down and to the Right
+            // Increment X, Increment Y
+            path[i][0] = src_x + 1 + i;
+            path[i][1] = src_y + 1 + i;
+        } else if (dst_y > src_y && dst_x < src_x) {
+            // Move Down and to the Left
+            // Decrement X, Increment Y
+            path[i][0] = src_x - 1 - i;
+            path[i][1] = src_y + 1 + i;
+        } else if (dst_y < src_y && dst_x > src_x) {
+            // Move Up and to the Right
+            // Increment X, Decrement Y
+            path[i][0] = src_x + 1 + i;
+            path[i][1] = src_y - 1 - i;
+        } else if (dst_y < src_y && dst_x < src_x) {
+            // Move Up and to the Left
+            // Decrement X, Decrement Y
+            path[i][0] = src_x - 1 - i;
+            path[i][1] = src_y - 1 - i;
+        }
+    }
+
+    return path;
+}
+
 int Bishop::checkMove(int src_x, int src_y, int dst_x, int dst_y)
 {
     /**
@@ -78,6 +149,81 @@ int Bishop::checkMove(int src_x, int src_y, int dst_x, int dst_y)
         return 0;
     }
     return 1;
+}
+
+int **Queen::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount)
+{
+    int **path;
+
+    // Get the Queen's direction of travel
+    int x_diff = abs(src_x - dst_x);
+    int y_diff = abs(src_y - dst_y);
+    int diagonalLine = x_diff == y_diff;
+    int straightLine = (src_x == dst_x && src_y != dst_y) || (src_x != dst_x && src_y == dst_y);
+
+    if (straightLine) {
+        // Subtract 1 to remove the source square
+        *pathCount = abs(dst_x - src_x) + abs(dst_y - src_y) - 1;
+        path = (int**) malloc(sizeof(int*) * *pathCount);
+
+        for (int i = 0; i < *pathCount; i++) {
+            path[i] = (int*) malloc(sizeof(int) * 2);
+            // Add or subtract 1 to X and Y to remove the source square
+            if (dst_y == src_y && dst_x > src_x) {
+                // Move Right
+                // Increment X
+                path[i][0] = src_x + 1 + i;
+                path[i][1] = src_y;
+            } else if (dst_y == src_y && dst_x < src_x) {
+                // Move Left
+                // Decrement X
+                path[i][0] = src_x - 1 - i;
+                path[i][1] = src_y;
+            } else if (dst_x == src_x && dst_y > src_y) {
+                // Move Down
+                // Increment Y
+                path[i][0] = src_x;
+                path[i][1] = src_y + 1 + i;
+            } else if (dst_x == src_x && dst_y < src_y) {
+                // Move Up
+                // Decrement Y
+                path[i][0] = src_x;
+                path[i][1] = src_y - 1 - i;
+            }
+        }
+    } else if (diagonalLine) {
+        // Subtract 1 to remove the source square
+        *pathCount = abs(dst_x - src_x) - 1;
+        path = (int**) malloc(sizeof(int*) * *pathCount);
+
+        for (int i = 0; i < *pathCount; i++) {
+            path[i] = (int*) malloc(sizeof(int) * 2);
+            // Add or subtract 1 to X and Y to remove the source square
+            if (dst_y > src_y && dst_x > src_x) {
+                // Move Down and to the Right
+                // Increment X, Increment Y
+                path[i][0] = src_x + 1 + i;
+                path[i][1] = src_y + 1 + i;
+            } else if (dst_y > src_y && dst_x < src_x) {
+                // Move Down and to the Left
+                // Decrement X, Increment Y
+                path[i][0] = src_x - 1 - i;
+                path[i][1] = src_y + 1 + i;
+            } else if (dst_y < src_y && dst_x > src_x) {
+                // Move Up and to the Right
+                // Increment X, Decrement Y
+                path[i][0] = src_x + 1 + i;
+                path[i][1] = src_y - 1 - i;
+            } else if (dst_y < src_y && dst_x < src_x) {
+                // Move Up and to the Left
+                // Decrement X, Decrement Y
+                path[i][0] = src_x - 1 - i;
+                path[i][1] = src_y - 1 - i;
+            }
+        }
+    }
+
+    return path;
 }
 
 int Queen::checkMove(int src_x, int src_y, int dst_x, int dst_y)
@@ -100,6 +246,13 @@ int Queen::checkMove(int src_x, int src_y, int dst_x, int dst_y)
     return 1;
 }
 
+int **King::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount)
+{
+    // The King only moves one square so there will never be a path
+    *pathCount = 0;
+    return nullptr;
+}
+
 // TODO:
 // Castling logic should be done in board.cc
 // Check and CheckMate logic should be done in board.cc
@@ -119,11 +272,21 @@ int King::checkMove(int src_x, int src_y, int dst_x, int dst_y)
     int x_diff = abs(src_x - dst_x);
     int y_diff = abs(src_y - dst_y);
 
+    int diagonalLine = x_diff == y_diff;
+    int straightLine = (src_x == dst_x && src_y != dst_y) || (src_x != dst_x && src_y == dst_y);
+
     // Check that the king is only moving into an adjacent square
-    if (x_diff > 1 || y_diff > 1) {
+    if ((diagonalLine && (x_diff != 1 || y_diff != 1)) || (straightLine && (x_diff + y_diff != 1))) {
         return 0;
     }
     return 1;
+}
+
+int **Knight::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount)
+{
+    // The Knight can jump over any pieces so a path doesn't exist
+    *pathCount = 0;
+    return nullptr;
 }
 
 int Knight::checkMove(int src_x, int src_y, int dst_x, int dst_y)
@@ -147,6 +310,43 @@ int Knight::checkMove(int src_x, int src_y, int dst_x, int dst_y)
         return 0;
     }
     return 1;
+}
+
+int **Pawn::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount)
+{
+    int **path;
+
+    // The pawn can only move more than one space on its first move.
+    // It can only move one space on all other moves so there will be no path
+    if (this->getMoveCount() != 0) {
+        *pathCount = 0;
+        return nullptr;
+    } else {
+        // Subtract 1 to remove the source square
+        *pathCount = abs(dst_y - src_y) - 1;
+        path = (int**) malloc(sizeof(int*) * *pathCount);
+
+        switch ((this->getColour()).getColour()) {
+            case COLOUR_WHITE:
+                // Subtract 1 from Y to remove the source square
+                for (int i = 0; i < *pathCount; i++) {
+                    path[i] = (int*) malloc(sizeof(int) * 2);
+                    path[i][0] = src_x;
+                    path[i][1] = src_y - 1 - i;
+                }
+                break;
+            case COLOUR_BLACK:
+                // Add 1 to Y to remove the source square
+                for (int i = 0; i < *pathCount; i++) {
+                    path[i] = (int*) malloc(sizeof(int) * 2);
+                    path[i][0] = src_x;
+                    path[i][1] = src_y + 1 + i;
+                }
+                break;
+        }
+
+        return path;
+    }
 }
 
 int Pawn::checkMove(int src_x, int src_y, int dst_x, int dst_y)

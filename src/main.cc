@@ -33,7 +33,10 @@ int main()
         // TODO: Otherwise, we should try and parse it as a move.
         // TODO: Maybe the user should have to type `move <src> <dst>`.
         // TODO: That way we could do `help <src> <dst>`, `show <src>`, etc..
-        scanf("\n%c%c %c%c", &player_move[0], &player_move[1], &player_move[2], &player_move[3]);
+        if (scanf("\n%c%c %c%c", &player_move[0], &player_move[1], &player_move[2], &player_move[3]) != 4) {
+            std::cout << "Unable to parse move" << std::endl;
+            continue;
+        }
 
         // TODO: Allow the player to enter show move for a piece and highlight where it can move
         chess_board.movePiece(current_player, player_move, &status_code);
@@ -61,6 +64,9 @@ int main()
                 continue;
             case OCCUPIED_DESTINATION_ERROR:
                 std::cout << "Target square already occupied" << std::endl;
+                continue;
+            case BLOCKED_PATH_ERROR:
+                std::cout << "Path to destination is blocked" << std::endl;
                 continue;
             default:
                 std::cout << "Unknown execption" << std::endl;

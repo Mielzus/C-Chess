@@ -32,6 +32,7 @@ class Piece
         void incrementMoveCount() {moveCount++;};
 
         virtual int checkMove(int src_x, int src_y, int dst_x, int dst_y) {return 1;};
+        virtual int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount) {return nullptr;};
 };
 
 class King : public Piece
@@ -39,6 +40,7 @@ class King : public Piece
     public:
         King(Colour c) : Piece(c, 'K', vKing) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
+        int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);
 };
 
 class Queen : public Piece
@@ -46,6 +48,7 @@ class Queen : public Piece
     public:
         Queen(Colour c) : Piece(c, 'Q', vQueen) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
+        int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);
 };
 
 class Rook : public Piece
@@ -53,6 +56,7 @@ class Rook : public Piece
     public:
         Rook(Colour c) : Piece(c, 'R', vRook) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
+        int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);
 };
 
 class Bishop : public Piece
@@ -60,6 +64,7 @@ class Bishop : public Piece
     public:
         Bishop(Colour c) : Piece(c, 'B', vBishop) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
+        int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);
 };
 
 class Knight : public Piece
@@ -67,6 +72,7 @@ class Knight : public Piece
     public:
         Knight(Colour c) : Piece(c, 'N', vKnight) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
+        int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);
 };
 
 class Pawn : public Piece
@@ -74,6 +80,7 @@ class Pawn : public Piece
     public:
         Pawn(Colour c) : Piece(c, 'P', vPawn) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
+        int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);
 };
 
 #endif // CHESS_PIECE_H
