@@ -1,8 +1,9 @@
 #ifndef CHESS_PLAYER_H
 #define CHESS_PLAYER_H
 
-#include <iostream>
 #include <cstring>
+#include <iostream>
+#include <vector>
 #include "colour.hh"
 
 class Player
@@ -11,6 +12,7 @@ class Player
         Colour colour;
         char *name;
         int score;
+        std::vector<char> capturedPieces;
     public:
         Player();
         Player(Colour colour);
@@ -18,7 +20,9 @@ class Player
         Colour getColour() {return colour;};
         char *getName() {return name;};
         int getScore() {return score;};
-        void setName(char *name);
+        void setName(const char *name);
+        void addScore(int score);
+        void addPiece(char piece);
         void print();
 };
 

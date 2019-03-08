@@ -31,8 +31,9 @@ class Piece
         int getMoveCount() {return moveCount;};
         void incrementMoveCount() {moveCount++;};
 
+        virtual ~Piece() {};
         virtual int checkMove(int src_x, int src_y, int dst_x, int dst_y) {return 1;};
-        virtual int checkCapture(int src_x, int src_y, int dst_x, int dst_y) {return 1;};
+        virtual int checkCapture(int src_x, int src_y, int dst_x, int dst_y) {return this->checkMove(src_x, src_y, dst_x, dst_y);};
         virtual int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount) {return nullptr;};
 };
 
@@ -41,7 +42,6 @@ class King : public Piece
     public:
         King(Colour c) : Piece(c, 'K', vKing) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
-        int checkCapture(int src_x, int src_y, int dst_x, int dst_y);
         int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);
 };
 
@@ -50,7 +50,6 @@ class Queen : public Piece
     public:
         Queen(Colour c) : Piece(c, 'Q', vQueen) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
-        int checkCapture(int src_x, int src_y, int dst_x, int dst_y);
         int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);
 };
 
@@ -59,7 +58,6 @@ class Rook : public Piece
     public:
         Rook(Colour c) : Piece(c, 'R', vRook) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
-        int checkCapture(int src_x, int src_y, int dst_x, int dst_y);
         int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);
 };
 
@@ -68,7 +66,6 @@ class Bishop : public Piece
     public:
         Bishop(Colour c) : Piece(c, 'B', vBishop) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
-        int checkCapture(int src_x, int src_y, int dst_x, int dst_y);
         int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);
 };
 
@@ -77,7 +74,6 @@ class Knight : public Piece
     public:
         Knight(Colour c) : Piece(c, 'N', vKnight) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
-        int checkCapture(int src_x, int src_y, int dst_x, int dst_y);
         int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);
 };
 

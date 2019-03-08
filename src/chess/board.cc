@@ -90,7 +90,13 @@ void Board::initializePieces()
 // TODO:
 // Add check each time the king moves to ensure it is not in check
 // If the piece is a pawn check if it is at the end for a promotion
-void Board::movePiece(Player player, char *move, int *status_code)
+//
+// - check
+// - checkmate
+// - Pawn promotion
+// - en passant
+// - castling
+void Board::movePiece(Player *player, char *move, int *status_code)
 {
     int src_y = move[0] - 'a';
     int src_x = 7 - (move[1] - '0' - 1);
@@ -121,14 +127,8 @@ void Board::movePiece(Player player, char *move, int *status_code)
     }
 
     // Check if the source square contains a valid piece for the current player
-    if (src_square->getPiece()->getColour().getColour() != player.getColour().getColour()) {
+    if (src_square->getPiece()->getColour().getColour() != player->getColour().getColour()) {
         *status_code = INVALID_COLOUR_ERROR;
-        return;
-    }
-
-    // Check if the path to the destination is clear
-    if (!this->checkPath(piece, src_square->getX(), src_square->getY(), dst_square->getX(), dst_square->getY())) {
-        *status_code = INVALID_MOVE_ERROR;
         return;
     }
 
@@ -150,9 +150,17 @@ void Board::movePiece(Player player, char *move, int *status_code)
             *status_code = INVALID_MOVE_ERROR;
             return;
         } else {
-            // TODO: At the captured piece to a list somewhere and increase score
-            dst_square->setPiece(nullptr);
+            // TODO: At the captured piece to a list somewhere
+            player->addScore(dst_square->getPiece()->getValue());
+            player->addPiece(dst_square->getPiece()->getName());
+            delete dst_square->getPiece();
         }
+    }
+
+    // Check if the path to the destination is clear
+    if (!this->checkPath(piece, src_square->getX(), src_square->getY(), dst_square->getX(), dst_square->getY())) {
+        *status_code = INVALID_MOVE_ERROR;
+        return;
     }
 
     *status_code = SUCCESS;

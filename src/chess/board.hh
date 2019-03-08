@@ -26,7 +26,7 @@ class Board
     public:
         Board();
         void initializePieces();
-        void movePiece(Player player, char *move, int *status);
+        void movePiece(Player *player, char *move, int *status);
         void print();
 };
 

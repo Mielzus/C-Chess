@@ -14,9 +14,9 @@ int main()
     puts("Moves can be entered by inputting a source piece and then its destination in the form: '<row><column> <row><column>'");
 
     // TODO: Set up player profile(s)
-    Player white_player = Player(Colour(COLOUR_WHITE));
-    Player black_player = Player(Colour(COLOUR_BLACK));
-    Player current_player;
+    Player *white_player = new Player(Colour(COLOUR_WHITE));
+    Player *black_player = new Player(Colour(COLOUR_BLACK));
+    Player *current_player;
 
     int turn_count = 0;
     int status_code;
@@ -27,7 +27,7 @@ int main()
         // White player always starts first
         current_player = (turn_count % 2 == 0) ? white_player : black_player;
 
-        printf("It is %s's turn. Enter your move '(a-h)(1-8) (a-h)(1-8)':\n", current_player.getColour().getColourName());
+        printf("It is %s's turn. Enter your move '(a-h)(1-8) (a-h)(1-8)':\n", current_player->getColour().getColourName());
         // TODO: Maybe input this as a string and then check it.
         // TODO: If it is `help`, `show`, or `exit` we should do those actions.
         // TODO: Otherwise, we should try and parse it as a move.
@@ -44,7 +44,9 @@ int main()
         // Check for errors and prompt the user to retry if they enter an invalid move
         switch (status_code) {
             case SUCCESS:
-                printf("%s has decided to move the piece at %c%c to %c%c\n", current_player.getColour().getColourName(), player_move[0], player_move[1], player_move[2], player_move[3]);
+                printf("\n%s has decided to move the piece at %c%c to %c%c\n", current_player->getName(), player_move[0], player_move[1], player_move[2], player_move[3]);
+                black_player->print();
+                white_player->print();
                 chess_board.print();
                 break;
             case INVALID_SOURCE_ERROR:

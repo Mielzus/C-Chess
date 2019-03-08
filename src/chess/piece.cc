@@ -1,8 +1,5 @@
 #include "piece.hh"
 
-// TODO: Figure out how to check for capture.
-// Add a function checkCapture that runs if an opponents piece is on the target square
-
 Piece::Piece(Colour c, char n, int v)
 {
     colour = c;
@@ -95,10 +92,6 @@ int Rook::checkMove(int src_x, int src_y, int dst_x, int dst_y)
     return 1;
 }
 
-int Rook::checkCapture(int src_x, int src_y, int dst_x, int dst_y) {
-    return this->checkMove(src_x, src_y, dst_x, dst_y);
-}
-
 int **Bishop::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount)
 {
     int **path;
@@ -153,10 +146,6 @@ int Bishop::checkMove(int src_x, int src_y, int dst_x, int dst_y)
         return 0;
     }
     return 1;
-}
-
-int Bishop::checkCapture(int src_x, int src_y, int dst_x, int dst_y) {
-    return this->checkMove(src_x, src_y, dst_x, dst_y);
 }
 
 int **Queen::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount)
@@ -254,10 +243,6 @@ int Queen::checkMove(int src_x, int src_y, int dst_x, int dst_y)
     return 1;
 }
 
-int Queen::checkCapture(int src_x, int src_y, int dst_x, int dst_y) {
-    return this->checkMove(src_x, src_y, dst_x, dst_y);
-}
-
 int **King::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount)
 {
     // The King only moves one square so there will never be a path
@@ -294,10 +279,6 @@ int King::checkMove(int src_x, int src_y, int dst_x, int dst_y)
     return 1;
 }
 
-int King::checkCapture(int src_x, int src_y, int dst_x, int dst_y) {
-    return this->checkMove(src_x, src_y, dst_x, dst_y);
-}
-
 int **Knight::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount)
 {
     // The Knight can jump over any pieces so a path doesn't exist
@@ -326,10 +307,6 @@ int Knight::checkMove(int src_x, int src_y, int dst_x, int dst_y)
         return 0;
     }
     return 1;
-}
-
-int Knight::checkCapture(int src_x, int src_y, int dst_x, int dst_y) {
-    return this->checkMove(src_x, src_y, dst_x, dst_y);
 }
 
 int **Pawn::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount)
