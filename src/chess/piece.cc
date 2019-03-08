@@ -95,6 +95,10 @@ int Rook::checkMove(int src_x, int src_y, int dst_x, int dst_y)
     return 1;
 }
 
+int Rook::checkCapture(int src_x, int src_y, int dst_x, int dst_y) {
+    return this->checkMove(src_x, src_y, dst_x, dst_y);
+}
+
 int **Bishop::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount)
 {
     int **path;
@@ -149,6 +153,10 @@ int Bishop::checkMove(int src_x, int src_y, int dst_x, int dst_y)
         return 0;
     }
     return 1;
+}
+
+int Bishop::checkCapture(int src_x, int src_y, int dst_x, int dst_y) {
+    return this->checkMove(src_x, src_y, dst_x, dst_y);
 }
 
 int **Queen::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount)
@@ -246,6 +254,10 @@ int Queen::checkMove(int src_x, int src_y, int dst_x, int dst_y)
     return 1;
 }
 
+int Queen::checkCapture(int src_x, int src_y, int dst_x, int dst_y) {
+    return this->checkMove(src_x, src_y, dst_x, dst_y);
+}
+
 int **King::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount)
 {
     // The King only moves one square so there will never be a path
@@ -276,10 +288,14 @@ int King::checkMove(int src_x, int src_y, int dst_x, int dst_y)
     int straightLine = (src_x == dst_x && src_y != dst_y) || (src_x != dst_x && src_y == dst_y);
 
     // Check that the king is only moving into an adjacent square
-    if ((diagonalLine && (x_diff != 1 || y_diff != 1)) || (straightLine && (x_diff + y_diff != 1))) {
+    if (!(diagonalLine && (x_diff == 1 && y_diff == 1)) && !(straightLine && (x_diff + y_diff == 1))) {
         return 0;
     }
     return 1;
+}
+
+int King::checkCapture(int src_x, int src_y, int dst_x, int dst_y) {
+    return this->checkMove(src_x, src_y, dst_x, dst_y);
 }
 
 int **Knight::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount)
@@ -306,10 +322,14 @@ int Knight::checkMove(int src_x, int src_y, int dst_x, int dst_y)
     int y_diff = abs(src_y - dst_y);
 
     // Check that the path formed is an L
-    if (x_diff + y_diff != 3) {
+    if ((x_diff != 2 || y_diff != 1) && (x_diff != 1 || y_diff != 2)) {
         return 0;
     }
     return 1;
+}
+
+int Knight::checkCapture(int src_x, int src_y, int dst_x, int dst_y) {
+    return this->checkMove(src_x, src_y, dst_x, dst_y);
 }
 
 int **Pawn::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount)
@@ -418,6 +438,32 @@ int Pawn::checkMove(int src_x, int src_y, int dst_x, int dst_y)
             break;
         case COLOUR_BLACK:
             if (dst_y - src_y > spacesAllowed) {
+                return 0;
+            }
+            break;
+    }
+    return 1;
+}
+
+int Pawn::checkCapture(int src_x, int src_y, int dst_x, int dst_y)
+{
+    int x_diff = abs(src_x - dst_x);
+    int y_diff = abs(src_y - dst_y);
+
+    // Check that the piece is only moving one square diagonally
+    if (!(x_diff == 1 && y_diff == 1)) {
+        return 0;
+    }
+
+    // Check that the piece is moving in the correct direction
+    switch ((this->getColour()).getColour()) {
+        case COLOUR_WHITE:
+            if (dst_y > src_y) {
+                return 0;
+            }
+            break;
+        case COLOUR_BLACK:
+            if (dst_y < src_y) {
                 return 0;
             }
             break;

@@ -87,6 +87,9 @@ void Board::initializePieces()
     (board[6][7])->setPiece(new Pawn(white));
 }
 
+// TODO:
+// Add check each time the king moves to ensure it is not in check
+// If the piece is a pawn check if it is at the end for a promotion
 void Board::movePiece(Player player, char *move, int *status_code)
 {
     int src_y = move[0] - 'a';
@@ -123,22 +126,33 @@ void Board::movePiece(Player player, char *move, int *status_code)
         return;
     }
 
-    // Check if the destination contains a piece
-    if (dst_square->getPiece() != nullptr) {
-        *status_code = OCCUPIED_DESTINATION_ERROR;
-        return;
-    }
-
-    // Check if the piece is allowed to move to the destination
-    if (!piece->checkMove(src_square->getX(), src_square->getY(), dst_square->getX(), dst_square->getY())) {
+    // Check if the path to the destination is clear
+    if (!this->checkPath(piece, src_square->getX(), src_square->getY(), dst_square->getX(), dst_square->getY())) {
         *status_code = INVALID_MOVE_ERROR;
         return;
     }
 
-    // Check if the path to the destination is clear
-    if (!this->checkPath(piece, src_square->getX(), src_square->getY(), dst_square->getX(), dst_square->getY())) {
-        *status_code = BLOCKED_PATH_ERROR;
-        return;
+    // Check if there is a piece on the destination squre
+    if (dst_square->getPiece() == nullptr) {
+        // Check if the piece is allowed to move to the destination
+        if (!piece->checkMove(src_square->getX(), src_square->getY(), dst_square->getX(), dst_square->getY())) {
+            *status_code = INVALID_MOVE_ERROR;
+            return;
+        }
+    } else {
+        // Don't allow friendly capture
+        if (dst_square->getPiece()->getColour().getColour() == src_square->getPiece()->getColour().getColour()){
+            *status_code = INVALID_MOVE_ERROR;
+            return;
+        }
+        // Check if the piece is allowed to move to and capture the target piece
+        if (!piece->checkCapture(src_square->getX(), src_square->getY(), dst_square->getX(), dst_square->getY())) {
+            *status_code = INVALID_MOVE_ERROR;
+            return;
+        } else {
+            // TODO: At the captured piece to a list somewhere and increase score
+            dst_square->setPiece(nullptr);
+        }
     }
 
     *status_code = SUCCESS;
