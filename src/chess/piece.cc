@@ -252,7 +252,6 @@ int **King::generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCo
 
 // TODO:
 // Castling logic should be done in board.cc
-// Check and CheckMate logic should be done in board.cc
 int King::checkMove(int src_x, int src_y, int dst_x, int dst_y)
 {
     /**
@@ -405,8 +404,7 @@ int Pawn::checkMove(int src_x, int src_y, int dst_x, int dst_y)
     if (src_x != dst_x) {
         return 0;
     }
-    // Check that the pawn is only moving one sqaure in the y direction
-    // TODO: Figure out a way to check for 2 sqaures on first move
+    // Check that the pawn is only moving in the correct y direction
     switch ((this->getColour()).getColour()) {
         case COLOUR_WHITE:
             if (src_y - dst_y > spacesAllowed) {

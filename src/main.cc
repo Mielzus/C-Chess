@@ -3,6 +3,8 @@
 #include "chess/player.hh"
 #include "chess/colour.hh"
 
+#define MAX_COMMAND_L 20
+
 int main()
 {
     Board chess_board;
@@ -11,7 +13,8 @@ int main()
     chess_board.print();
 
     puts("Welcome to terminal chess!");
-    puts("Moves can be entered by inputting a source piece and then its destination in the form: '<row><column> <row><column>'");
+    puts("Moves can be entered by inputting a source piece and then its destination in the form: '<row><column> <row><column>'.");
+    puts("Type 'help' for more options");
 
     // TODO: Set up player profile(s)
     Player *white_player = new Player(Colour(COLOUR_WHITE));
@@ -22,6 +25,7 @@ int main()
     int turn_count = 0;
     int status_code;
     char player_move[4];
+    char command[MAX_COMMAND_L];
 
     // Main game loop
     while (1) {
@@ -31,9 +35,22 @@ int main()
         // TODO: Otherwise, we should try and parse it as a move.
         // TODO: Maybe the user should have to type `move <src> <dst>`.
         // TODO: That way we could do `help <src> <dst>`, `show <src>`, etc..
-        if (scanf("\n%c%c %c%c", &player_move[0], &player_move[1], &player_move[2], &player_move[3]) != 4) {
-            std::cout << "Unable to parse move" << std::endl;
+        fgets(command, MAX_COMMAND_L, stdin);
+        if (strncmp(command, "exit", 4) == 0 || strncmp(command, "quit", 4) == 0) {
+            std::cout << "Thanks for playing!" << std::endl;
+            return EXIT_SUCCESS;
+        } else if (strncmp(command, "help", 4) == 0) {
+            std::cout << std::endl << "Available command options" << std::endl;
+            std::cout << "----------------------------------" << std::endl;
+            std::cout << "help - List available commands" << std::endl;
+            std::cout << "exit, quit - Exit the game" << std::endl;
+            std::cout << "(a-h)(1-8) (a-h)(1-8) - Enter the source and destination square for your move" << std::endl << std::endl;
             continue;
+        } else {
+            if (sscanf(command, "\n%c%c %c%c", &player_move[0], &player_move[1], &player_move[2], &player_move[3]) != 4) {
+                std::cout << "Unable to parse move" << std::endl;
+                continue;
+            }
         }
 
         // TODO: Allow the player to enter show move for a piece and highlight where it can move

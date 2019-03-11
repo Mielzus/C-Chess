@@ -149,7 +149,6 @@ void Board::movePiece(Player *player, char *move, int *status_code)
             *status_code = INVALID_MOVE_ERROR;
             return;
         } else {
-            // TODO: At the captured piece to a list somewhere
             player->addScore(dst_square->getPiece()->getValue());
             player->addPiece(dst_square->getPiece()->getName());
             delete dst_square->getPiece();
