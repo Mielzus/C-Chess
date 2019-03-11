@@ -16,7 +16,8 @@ int main()
     // TODO: Set up player profile(s)
     Player *white_player = new Player(Colour(COLOUR_WHITE));
     Player *black_player = new Player(Colour(COLOUR_BLACK));
-    Player *current_player;
+    // White player always starts first
+    Player *current_player = white_player;
 
     int turn_count = 0;
     int status_code;
@@ -24,9 +25,6 @@ int main()
 
     // Main game loop
     while (1) {
-        // White player always starts first
-        current_player = (turn_count % 2 == 0) ? white_player : black_player;
-
         printf("It is %s's turn. Enter your move '(a-h)(1-8) (a-h)(1-8)':\n", current_player->getColour().getColourName());
         // TODO: Maybe input this as a string and then check it.
         // TODO: If it is `help`, `show`, or `exit` we should do those actions.
@@ -70,11 +68,28 @@ int main()
             case BLOCKED_PATH_ERROR:
                 std::cout << "Path to destination is blocked" << std::endl;
                 continue;
+            case KING_ENTER_CHECK_ERROR:
+                std::cout << "King is in check on target square" << std::endl;
+                continue;
             default:
                 std::cout << "Unknown execption" << std::endl;
                 continue;
         }
         turn_count++;
+
+        // Switch to the other player
+        current_player = (turn_count % 2 == 0) ? white_player : black_player;
+        // Check if the player is in check
+        chess_board.checkCheckMate(current_player, &status_code);
+
+        switch(status_code) {
+            case PLAYER_IN_CHECK:
+                std::cout << current_player->getName() << " is currently in check." << std::endl;
+                break;
+            case PLAYER_IN_CHECKMATE:
+                std::cout << current_player->getName() << " is in checkmate." << std::endl;
+                break;
+        } 
     }
 
     return 0;

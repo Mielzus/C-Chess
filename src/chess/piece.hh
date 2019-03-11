@@ -5,6 +5,16 @@
 #include <iostream>
 #include "colour.hh"
 
+enum PieceNames
+{
+    nKing = 'K',
+    nQueen = 'Q',
+    nRook = 'R',
+    nBishop = 'B',
+    nKnight = 'N',
+    nPawn = 'P'
+};
+
 enum PieceValues
 {
     vKing = 0,
@@ -40,7 +50,7 @@ class Piece
 class King : public Piece
 {
     public:
-        King(Colour c) : Piece(c, 'K', vKing) {}
+        King(Colour c) : Piece(c, nKing, vKing) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
         int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);
 };
@@ -48,7 +58,7 @@ class King : public Piece
 class Queen : public Piece
 {
     public:
-        Queen(Colour c) : Piece(c, 'Q', vQueen) {}
+        Queen(Colour c) : Piece(c, nQueen, vQueen) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
         int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);
 };
@@ -56,7 +66,7 @@ class Queen : public Piece
 class Rook : public Piece
 {
     public:
-        Rook(Colour c) : Piece(c, 'R', vRook) {}
+        Rook(Colour c) : Piece(c, nRook, vRook) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
         int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);
 };
@@ -64,7 +74,7 @@ class Rook : public Piece
 class Bishop : public Piece
 {
     public:
-        Bishop(Colour c) : Piece(c, 'B', vBishop) {}
+        Bishop(Colour c) : Piece(c, nBishop, vBishop) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
         int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);
 };
@@ -72,7 +82,7 @@ class Bishop : public Piece
 class Knight : public Piece
 {
     public:
-        Knight(Colour c) : Piece(c, 'N', vKnight) {}
+        Knight(Colour c) : Piece(c, nKnight, vKnight) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
         int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);
 };
@@ -80,7 +90,7 @@ class Knight : public Piece
 class Pawn : public Piece
 {
     public:
-        Pawn(Colour c) : Piece(c, 'P', vPawn) {}
+        Pawn(Colour c) : Piece(c, nPawn, vPawn) {}
         int checkMove(int src_x, int src_y, int dst_x, int dst_y);
         int checkCapture(int src_x, int src_y, int dst_x, int dst_y);
         int **generatePath(int src_x, int src_y, int dst_x, int dst_y, int *pathCount);

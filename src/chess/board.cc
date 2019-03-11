@@ -91,7 +91,6 @@ void Board::initializePieces()
 // Add check each time the king moves to ensure it is not in check
 // If the piece is a pawn check if it is at the end for a promotion
 //
-// - check
 // - checkmate
 // - Pawn promotion
 // - en passant
@@ -159,14 +158,94 @@ void Board::movePiece(Player *player, char *move, int *status_code)
 
     // Check if the path to the destination is clear
     if (!this->checkPath(piece, src_square->getX(), src_square->getY(), dst_square->getX(), dst_square->getY())) {
-        *status_code = INVALID_MOVE_ERROR;
+        *status_code = BLOCKED_PATH_ERROR;
         return;
+    }
+
+    // If the piece is the king make sure it can't move into check
+    if (piece->getName() == nKing) {
+        Piece *tempPiece = dst_square->getPiece();
+        dst_square->setPiece(piece);
+        src_square->setPiece(nullptr);
+
+        if (this->checkCheck(player, dst_square->getX(), dst_square->getY())) {
+            *status_code = KING_ENTER_CHECK_ERROR;
+            dst_square->setPiece(tempPiece);
+            src_square->setPiece(piece);
+            return;
+        }
     }
 
     *status_code = SUCCESS;
     piece->incrementMoveCount();
     dst_square->setPiece(piece);
     src_square->setPiece(nullptr);
+}
+
+Square *Board::findKing(char colour)
+{
+    Square *square;
+    Piece *piece;
+
+    for (int x = 0; x < BOARD_SIZE; x++) {
+        for (int y = 0; y < BOARD_SIZE; y++) {
+            square = board[x][y];
+            piece = square->getPiece();
+
+            if (piece != nullptr && piece->getName() == nKing && piece->getColour().getColour() == colour) {
+                return square;
+            }
+        }
+    }
+    return nullptr;
+}
+
+int Board::checkCheck(Player *player, int kingX, int kingY)
+{
+    int canCapture, pathClear;
+    Square *square;
+    Piece *piece;
+
+    // Check if the king is in check by any piece on the board
+    for (int x = 0; x < BOARD_SIZE; x++) {
+        for (int y = 0; y < BOARD_SIZE; y++) {
+            square = board[x][y];
+            piece = square->getPiece();
+
+            // Only check for opponents pieces
+            if (piece != nullptr && piece->getColour().getColour() != player->getColour().getColour()) {
+                canCapture = piece->checkCapture(square->getX(), square->getY(), kingX, kingY);
+                if (!canCapture) {
+                    continue;
+                }
+                pathClear = this->checkPath(piece, square->getX(), square->getY(), kingX, kingY);
+
+                if (canCapture && pathClear) {
+                    return 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
+// TODO:
+// Check if the king is in check for all positions it can move to
+void Board::checkCheckMate(Player *player, int *status)
+{
+    int inCheck = 0;
+    Square *kingSquare;
+
+    // Check if the king is in check
+    kingSquare = this->findKing(player->getColour().getColour());
+    inCheck = this->checkCheck(player, kingSquare->getX(), kingSquare->getY());
+
+    if (inCheck) {
+        *status = PLAYER_IN_CHECK;
+        return;
+    }
+
+    *status = SUCCESS;
 }
 
 int Board::checkPath(Piece *piece, int src_x, int src_y, int dst_x, int dst_y)

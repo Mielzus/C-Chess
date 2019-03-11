@@ -17,16 +17,23 @@
 #define INVALID_SOURCE_PIECE_ERROR 10  // No valid piece on source square
 #define OCCUPIED_DESTINATION_ERROR 11  // Target square occupied
 #define BLOCKED_PATH_ERROR 12  // A piece is blocking path to destination
+#define KING_ENTER_CHECK_ERROR 13 // King is attempting to move into check
+
+#define PLAYER_IN_CHECK 20 // Player is in check but can get out of it
+#define PLAYER_IN_CHECKMATE 21 // Player is in checkmate
 
 class Board
 {
     private:
         Square ***board;
+        int checkCheck(Player *player, int kingX, int kingY);
         int checkPath(Piece *piece, int src_x, int src_y, int dst_x, int dst_y);
+        Square *findKing(char colour);
     public:
         Board();
         void initializePieces();
         void movePiece(Player *player, char *move, int *status);
+        void checkCheckMate(Player *player, int *status);
         void print();
 };
 
